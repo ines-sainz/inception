@@ -1,0 +1,27 @@
+services:
+  mariadb:
+    build:
+      context: ./mariadb
+    container_name: mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - inception
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/isainz-r/Volumenes/MD_TEST
+      o: bind
+    name: mariadb_data
+
+networks:
+  inception:
+    driver: bridge
