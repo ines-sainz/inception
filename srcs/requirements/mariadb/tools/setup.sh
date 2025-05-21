@@ -8,7 +8,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 fi
 
 # Start MariaDB temporarily in background with networking enabled
-mysqld_safe &
+mysqld &
 sleep 10  # wait for it to be ready
 
 echo "Creating database and user..."
@@ -16,22 +16,31 @@ echo "Creating database and user..."
 # Unset MYSQL_HOST so mariadb client connects via socket (localhost)
 unset MYSQL_HOST
 
-mariadb -u root -p"${MYSQL_ROOT_PASSWORD}" <<-EOSQL
-    CREATE DATABASE IF NOT EXISTS \${MYSQL_DATABASE}\;
-    CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
-    GRANT ALL PRIVILEGES ON \${MYSQL_DATABASE}\.* TO '${MYSQL_USER}'@'%';
+mariadb <<-EOSQL
+    CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
+    CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+    CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+    GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
     FLUSH PRIVILEGES;
 EOSQL
 
+echo "viendo la vida pasar"
 # Gracefully stop the temporary MariaDB server
-mysqladmin -u root shutdown
+#mysqladmin shutdown
+
+echo "pues al final no era para tanto"
 
 # Wait until MariaDB has fully stopped before continuing
-while pgrep mariadbd >/dev/null; do
-    sleep 1
-done
+#while pgrep mariadbd >/dev/null; do
+#    echo "bucle infinito"
+#    sleep 1
+#done
+
+killall mysqld || true
+sleep 3
 
 echo "Starting MariaDB server..."
 
 # Start MariaDB as the main foreground process (PID 1 in container)
-exec mysqld
+mysqld
