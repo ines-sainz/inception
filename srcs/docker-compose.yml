@@ -1,10 +1,11 @@
 services:
   mariadb:
     build:
-      context: ./mariadb
+      context: ./requirements/mariadb
     container_name: mariadb
     volumes:
       - mariadb_data:/var/lib/mysql
+      - ./requirements/mariadb/conf/my.cnf:/etc/mysql/my.cnf:ro
     ports:
       - "3306:3306"
     networks:
@@ -18,7 +19,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/isainz-r/Volumenes/MD_TEST
+      device: /home/isainz-r/Volumenes/MD
       o: bind
     name: mariadb_data
 
