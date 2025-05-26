@@ -9,7 +9,7 @@ fi
 
 # Start MariaDB temporarily in background with networking enabled
 mysqld &
-sleep 10  # wait for it to be ready
+sleep 5  # wait for it to be ready
 
 echo "Creating database and user..."
 
@@ -18,7 +18,7 @@ unset MYSQL_HOST
 
 mariadb <<-EOSQL
     CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
-    CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+    CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
     CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
     GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
     GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
@@ -44,3 +44,7 @@ echo "Starting MariaDB server..."
 
 # Start MariaDB as the main foreground process (PID 1 in container)
 mysqld
+
+
+
+#Wordpress
