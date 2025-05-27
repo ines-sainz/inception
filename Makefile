@@ -4,8 +4,8 @@ COMPOSE_FILE=srcs/docker-compose.yml
 all: up
 
 up:
-	sudo rm -rf /home/isainz-r/Volumenes/MD/*
-	sudo rm -rf /home/isainz-r/Volumenes/WP/*
+	sudo rm -rf /home/isainz-r/data/MD/*
+	sudo rm -rf /home/isainz-r/data/WP/*
 	$(COMPOSE) -f $(COMPOSE_FILE) up --build -d
 
 down:

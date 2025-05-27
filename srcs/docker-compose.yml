@@ -3,6 +3,7 @@ services:
     build:
       context: ./requirements/mariadb
     container_name: mariadb
+    image: mariadb
     volumes:
       - mariadb_data:/var/lib/mysql
       - ./requirements/mariadb/conf/my.cnf:/etc/mysql/my.cnf:ro
@@ -18,6 +19,7 @@ services:
     build:
       context: ./requirements/wordpress
     container_name: wordpress
+    image: wordpress
     volumes:
       - wordpress_files:/var/www/html
     networks:
@@ -32,6 +34,7 @@ services:
     build:
       context: ./requirements/nginx
     container_name: nginx
+    image: nginx
     ports:
       - "443:443"
     volumes:
@@ -48,7 +51,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/isainz-r/Volumenes/MD
+      device: /home/isainz-r/data/MD
       o: bind
     name: mariadb_data
 
@@ -56,7 +59,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/isainz-r/Volumenes/WP
+      device: /home/isainz-r/data/WP
       o: bind
     name: wordpress_files
 

@@ -44,7 +44,3 @@ echo "Starting MariaDB server..."
 
 # Start MariaDB as the main foreground process (PID 1 in container)
 mysqld
-
-
-
-#Wordpress
