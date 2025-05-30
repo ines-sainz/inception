@@ -25,18 +25,6 @@ mariadb <<-EOSQL
     FLUSH PRIVILEGES;
 EOSQL
 
-echo "viendo la vida pasar"
-# Gracefully stop the temporary MariaDB server
-#mysqladmin shutdown
-
-echo "pues al final no era para tanto"
-
-# Wait until MariaDB has fully stopped before continuing
-#while pgrep mariadbd >/dev/null; do
-#    echo "bucle infinito"
-#    sleep 1
-#done
-
 killall mysqld || true
 sleep 3
 
