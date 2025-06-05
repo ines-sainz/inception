@@ -1,68 +1,98 @@
+# Define the services (containers) in the application
 services:
+
+  # MariaDB service configuration
   mariadb:
+    # Build the image from the specified directory
     build:
       context: ./requirements/mariadb
+    # Name of the running container
     container_name: mariadb
+    # Tag/name for the image built
     image: mariadb
+    # Mount volumes for persistent data and custom config
     volumes:
-      - mariadb_data:/var/lib/mysql
-      - ./requirements/mariadb/conf/my.cnf:/etc/mysql/my.cnf:ro
+      - mariadb_data:/var/lib/mysql  # Persist database data
+      - ./requirements/mariadb/conf/my.cnf:/etc/mysql/my.cnf:ro  # Read-only mount of custom config
+    # Map container port 3306 to host
     ports:
       - "3306:3306"
+    # Attach to the 'inception' network
     networks:
       - inception
+    # Load environment variables from a .env file
     env_file:
       - .env
+    # Automatically restart the container on failure
     restart: always
 
+  # WordPress service configuration
   wordpress:
+    # Build the image from the specified directory
     build:
       context: ./requirements/wordpress
+    # Name of the running container
     container_name: wordpress
+    # Tag/name for the image built
     image: wordpress
+    # Mount volume to share WordPress files
     volumes:
       - wordpress_files:/var/www/html
+    # Attach to the 'inception' network
     networks:
       - inception
+    # Load environment variables from a .env file
     env_file:
       - .env
+    # Ensure this container starts after MariaDB
     depends_on:
       - mariadb
+    # Automatically restart the container on failure
     restart: always
 
+  # Nginx service configuration
   nginx:
+    # Build the image from the specified directory
     build:
       context: ./requirements/nginx
+    # Name of the running container
     container_name: nginx
+    # Tag/name for the image built
     image: nginx
+    # Map container port 443 (HTTPS) to host
     ports:
       - "443:443"
+    # Mount the same volume as WordPress to serve its files
     volumes:
       - wordpress_files:/var/www/html
+    # Attach to the 'inception' network
     networks:
       - inception
+    # Ensure this container starts after WordPress
     depends_on:
       - wordpress
+    # Automatically restart the container on failure
     restart: always
 
-
+# Define volumes for persistent storage
 volumes:
   mariadb_data:
-    driver: local
+    driver: local  # Use local volume driver
     driver_opts:
       type: none
-      device: /home/isainz-r/data/MD
+      device: /home/isainz-r/data/MD  # Host directory for DB data
       o: bind
-    name: mariadb_data
+    name: mariadb_data  # Explicit volume name
 
   wordpress_files:
-    driver: local
+    driver: local  # Use local volume driver
     driver_opts:
       type: none
-      device: /home/isainz-r/data/WP
+      device: /home/isainz-r/data/WP  # Host directory for WP files
       o: bind
-    name: wordpress_files
+    name: wordpress_files  # Explicit volume name
 
+# Define a custom network for inter-container communication
 networks:
   inception:
-    driver: bridge
+    driver: bridge  # Use Docker's bridge network driver
