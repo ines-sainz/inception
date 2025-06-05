@@ -14,6 +14,7 @@ Everything runs in isolated Docker containers, communicating through a dedicated
 
 ## 🎓 What Is Learned
 
+* How to use Docker and Docker Compose
 * How to write and configure Dockerfiles
 * Create and configure Docker images from scratch
 * Using Docker Compose to orchestrate multi-container setups
